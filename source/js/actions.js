@@ -1,7 +1,8 @@
 export default class ActionProxy {
 
-    constructor(children) {
+    constructor(dispatcher, children) {
         this.children = children;
+        this.dispatcher = dispatcher;
 
         this.methods = {};
 
@@ -27,20 +28,36 @@ export default class ActionProxy {
 
         if(!this.methods[prop]) {
             this.methods[prop] = {};
-            let getter = () => this.callMethod.bind(this, prop);
+            let getter = () => {
+                return this.callMethod.bind(this, prop);
+            };
             Object.defineProperty(this, prop, {get: getter})
         }
 
         let type = this.getTypeOf(child);
         this.methods[prop][type] = child;
-
+        this.dispatcher.addAction(this.getEventKey(type,prop));
     }
 
-    callMethod(name) {
+    getEventKey(type, name) {
+        var eventKey = (type + "_" + name).toUpperCase();
+        return eventKey;
+    }
+
+    callMethod(name, a1,a2,a3,a4,a5,a6,a7,a8,a9,a0,aa,ab,ac,ad,ae,af) {
+        let dispatch = ((eventKey, payload) => {
+            this.dispatcher.enqueue(eventKey, payload);
+        }).bind(this);
+
         if(this.methods[name]) {
+            let returns = [];
+
             for(let type in this.methods[name]) {
-                this.methods[name][type][name]();
+                let _dispatch = dispatch.bind(this,this.getEventKey(type, name));
+                returns.push(this.methods[name][type][name](_dispatch, a1,a2,a3,a4,a5,a6,a7,a8,a9,a0,aa,ab,ac,ad,ae,af));
             }
+
+            return returns;
         }
     }
 
@@ -52,10 +69,5 @@ export default class ActionProxy {
         } else {
             return typeof obj;
         }
-    }
-
-    get(target, property) {
-        return property in target ? target[property] :
-               target.callMethod(property);
     }
 };
