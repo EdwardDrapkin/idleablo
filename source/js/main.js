@@ -5,12 +5,19 @@ import ReactDOM from 'react-dom';
 import IdleabloComponent from 'components/IdleabloComponent.js';
 import IdleabloGame from 'components/IdleabloGame.js';
 import Dispatcher from 'dispatcher.js';
+import ActionProxy from 'actions.js';
 
+import TestActions from 'action_creators/TestActions.js';
 
 /*
 routing
  */
 var game = new IdleabloGame();
+var actionProxy = new ActionProxy([
+    new TestActions()
+]);
+actionProxy.notReal();
+
 var router = <Router>
     <Route name="index" component={IdleabloGame} path="/" />
 </Router>;
