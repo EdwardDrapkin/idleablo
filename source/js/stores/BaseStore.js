@@ -1,4 +1,2 @@
-export default class BaseStore extends EventEmitter {
-    constructor() {
-    }
+export default class BaseStore{
 }

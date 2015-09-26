@@ -1,4 +1,4 @@
-import ActionCreator from 'action_creators/ActionCreator.js';
+import ActionCreator from 'actions/ActionCreator.js';
 
 export default class TestActions extends ActionCreator {
     notReal(dispatch, arg1) {
@@ -29,7 +29,8 @@ export default class TestActions extends ActionCreator {
         Store.observe(TestActions.notReal, this.onNotReal);
 
         but i'm not quite there yet...
-        
+
+        once that's finished, and everything is finalized,
          */
         console.log("Magic inheritence!" + arg1);
 

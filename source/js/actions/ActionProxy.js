@@ -1,7 +1,8 @@
 export default class ActionProxy {
 
-    constructor(dispatcher, children) {
-        this.children = children;
+    constructor(dispatcher, actionCreators, stores) {
+        this.children = actionCreators;
+        this.stores = stores;
         this.dispatcher = dispatcher;
 
         this.methods = {};
@@ -16,6 +17,40 @@ export default class ActionProxy {
 
                 if(prop.constructor && prop.call && prop.apply) {
                     this.addMethod(propName, child);
+                }
+            }
+        }
+
+        for(let store of stores) {
+            for(let methodName in this.methods) {
+                let expectedListenerName = "on" + methodName.charAt(0).toUpperCase() + methodName.slice(1);
+
+                //they are listening for everyone's event
+                //e.g. onNotReal
+                if(store[expectedListenerName] &&
+                        store[expectedListenerName].constructor &&
+                        store[expectedListenerName].apply &&
+                        store[expectedListenerName].call) {
+                    for(let type in this.methods[methodName]) {
+                        let eventKey = this.getEventKey(type, methodName);
+                        this.dispatcher.subscribe(eventKey, store[expectedListenerName]);
+                    }
+                }
+
+                //they are looking for a specific type
+                //e.g. onTestActionsNotReal
+                for(let type in this.methods[methodName]) {
+                    let eventKey = this.getEventKey(type, methodName);
+                    let expectedListenerName = "on" +
+                                                type +
+                                                methodName.charAt(0).toUpperCase() + methodName.slice(1);
+
+                    if(store[expectedListenerName] &&
+                            store[expectedListenerName].constructor &&
+                            store[expectedListenerName].apply &&
+                            store[expectedListenerName].call) {
+                        this.dispatcher.subscribe(eventKey, store[expectedListenerName]);
+                    }
                 }
             }
         }
