@@ -8,7 +8,7 @@ import GameStore from 'stores/GameStore.js';
 class IdleabloGame extends BaseComponent {
     constructor(props) {
         super(props);
-
+        this.tickRate = 50;
         this.state = {};
         this.state.tick = window.tick = 0;
 
@@ -16,7 +16,7 @@ class IdleabloGame extends BaseComponent {
             this.props.actions.globalTick(this.props.actions.stores['GameStore'].tick+1);
             this.props.actions.dispatcher.dispatch();
             this.setState({tick: this.props.actions.stores['GameStore'].tick});
-        }).bind(this), 16);
+        }).bind(this), this.tickRate);
     }
 
     getChildContext() {

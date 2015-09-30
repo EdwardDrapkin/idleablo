@@ -1,0 +1,84 @@
+This should serve as a LIVING DOCUMENT for gameplay stuff.
+
+General idea
+    The general idea of the game is that you are going to incrementally expand from a small time meteor farmer
+    to the captain of the galaxy.  As you acquire resources, your empire will expand and your access to tools and
+    knowledge will increase with your reach.
+
+
+=== resources
+
+    The fundamental conceit of the game is farming resources to acquire more territory to farm more resources.
+
+    In the beginning, you start with a single drone and only one resource (rock) to farm and sell (cash).  As you
+    progress into farming the asteroid field, you'll unlock another resource that you can sell for more (glass).
+    Eventually in stage one you unlock dilithium which you need for FTL.
+
+         resource[requisites/info]
+
+        Stage one resources -   Ships       -   drone[cash]
+                                Farmables   -   rock[cash]->glass[cash]->dilithium[cash]
+                                Territories -   asteroids[cash, drones]->asteroid families?
+
+    Once you unlock FTL, dilithium becomes your primary resource and you unlock the 'systems' menu.  Within the
+    systems menu, you need to be able to see each system's resource production.  As you explore various systems,
+    you will discover the ability to farm a bunch of other resources that you need for galactic exploration.
+
+        Stage two resources -   Ships       -   drone ship[cash, dilithium], exploration ship[cash, dilithium]
+                                                space station[cash, dark matter], sun ship[cash, stardust]
+                                Farmables   -   dilithium->dark matter->stardust
+                                Territories -   solar systems, wormholes (allow more solar systems due to engines)
+
+    Once you go to war, the game really starts to grow grow grow
+
+        Stage three resources -     Ships        - tons of military options
+                                Farmables    - need to recruit soldiers as well as stuff for ammo / fuel
+                                Territories  - clusters, super portals, black holes, plenty of options
+
+    Stage four is stage three with tweaks.
+
+=== progression
+
+Beginning
+    You start at the beginning as a small time asteroid farmer.  You've got one drone who farms a sector slowly
+    and he comes back with rocks.  You sell rocks at a low rate.
+
+Stage one - outgrowing the solar system
+    After you acquire enough rocks, you'll buy more drones.
+
+    After you have enough drones, a story even occurs, and FTL is unlocked.
+
+    You can start buying ships to carry drones to other solar systems.
+
+Stage two - from systems to clusters
+    After you acquire a ship and start farming another solar system, we'll unlock a second-tier map menu
+    called "systems" where you can assign your ships to systems.  Each ship carries n drones and is assigned to
+    a solar system.
+
+    Once you have acquired enough ships to start exploring the galaxy, you unlock the "exploration" feature,
+    which is what we need to find other systems to mine.
+
+    Once you discover all the systems available to you, your explorers get bored and venture beyond the local cloud.
+
+Stage three - from local cluster to a galactic quadrant
+
+    After your explorers discover life in the rest of the galaxy, you get attacked and convert half of your workers to soldiers.
+
+    You learn how to create envoys - drones + ships + military... need to configure envoy's strength based on size of FTL sphere(?)
+
+    You also unlock the "subgroup" menu where you see collections of systems... or the warring factions of the galaxy.
+
+    As your resources and military expand, you can invade other subgroups and claim their systems, bringing them into your
+    systems menu.
+
+    Once you've conquered all of the factions, you're onto quadrants.
+
+Stage four - quadrants
+    At this point you zoom out a bit further and unlock the "quadrant" menu which has four unique quests.  The protector of the
+    quadrant or some story nonsense tells you that there's an artifact hidden... you find it, hear about three more.
+
+    The four quests should be
+        - focus on military
+        - focus on science/research
+        - focus on resources
+        - focus on settlements
