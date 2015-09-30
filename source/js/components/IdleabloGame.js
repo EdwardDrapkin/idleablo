@@ -1,23 +1,15 @@
 import React from 'react';
+import ActionProxy from 'actions/ActionProxy.js';
+import TestStore from 'stores/TestStore.js';
 import IdleabloComponent from 'components/IdleabloComponent.js';
-import Dispatcher from 'dispatcher.js';
 
-class IdleabloGame extends React.Component{
-    constructor(props) {
-        super(props);
-
-        var actions = {
-            FOO: 'FOO',
-            BAR: "BAR"
-        };
-
-
-        this.dispatcher = new Dispatcher(actions);
-    }
-
+class IdleabloGame extends React.Component {
     getChildContext() {
-        return {dispatcher: this.dispatcher};
+        return {
+            actions: this.props.actions
+        };
     }
+
 
     render() {
         return <div>Hello world!
@@ -26,6 +18,6 @@ class IdleabloGame extends React.Component{
     }
 };
 
-IdleabloGame.childContextTypes = { dispatcher: React.PropTypes.instanceOf(Dispatcher).isRequired };
-
 export default IdleabloGame;
+
+IdleabloGame.childContextTypes = { actions: React.PropTypes.instanceOf(ActionProxy).isRequired };

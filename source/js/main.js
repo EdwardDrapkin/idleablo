@@ -4,16 +4,27 @@ import { Router, Route, IndexRoute } from 'react-router';
 import ReactDOM from 'react-dom';
 import IdleabloComponent from 'components/IdleabloComponent.js';
 import IdleabloGame from 'components/IdleabloGame.js';
-import Dispatcher from 'dispatcher.js';
-
+import Dispatcher from 'actions/Dispatcher.js';
+import ActionProxy from 'actions/ActionProxy.js';
+import TestStore from 'stores/TestStore.js';
+import TestActions from 'actions/TestActions.js';
 
 /*
 routing
  */
 var game = new IdleabloGame();
-var router = <Router>
-    <Route name="index" component={IdleabloGame} path="/" />
-</Router>;
+var dispatcher = new Dispatcher();
+var actionCreators = [
+    new TestActions()
+];
 
+var stores = [
+    new TestStore()
+];
 
-ReactDOM.render(router, document.getElementById('idleablo-game'));
+var actionProxy = new ActionProxy(dispatcher, actionCreators, stores);
+
+ReactDOM.render(<IdleabloGame actions={actionProxy} />, document.getElementById('idleablo-game'));
+actionProxy.notReal("123", "321");
+dispatcher.dispatch();
+dispatcher.dispatch();
