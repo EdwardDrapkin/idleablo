@@ -21,7 +21,7 @@ export default class BaseComponent extends React.Component {
     }
 
     addAllCallbacks(type) {
-        var _listener = this._getStateFromStores;
+        var _listener = this._getStateFromStores.bind(this);
         console.log(this);
 
         var actions = (this.context && this.context.actions) || this.props.actions;
@@ -34,7 +34,7 @@ export default class BaseComponent extends React.Component {
     }
 
     addSpecificCallback(type, prop) {
-        var _listener = this._getStateFromStores;
+        var _listener = this._getStateFromStores.bind(this);
         var actions = (this.context && this.context.actions) || this.props.actions;
 
         if(prop != "constructor" && prop.startsWith('on')) {
