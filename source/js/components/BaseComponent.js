@@ -2,12 +2,6 @@ import React from 'react';
 import Dispatcher from 'actions/Dispatcher.js';
 import ActionProxy from 'actions/ActionProxy.js';
 export default class BaseComponent extends React.Component {
-    render() {
-        var context = this.context;
-
-        return <div>123</div>
-    }
-
     watchStore(type, event = null) {
         if(event == null) {
             this.addAllCallbacks(type);
