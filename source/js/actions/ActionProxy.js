@@ -27,9 +27,6 @@ export default class ActionProxy {
 
             for(let methodName in this.methods) {
                 let expectedListenerName = "on" + methodName.charAt(0).toUpperCase() + methodName.slice(1);
-
-                console.log(expectedListenerName);
-
                 //they are listening for everyone's event
                 //e.g. onNotReal
                 if(store[expectedListenerName] &&

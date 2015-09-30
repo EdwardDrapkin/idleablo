@@ -9,7 +9,6 @@ export default class Dispatcher {
     }
 
     addAction(action) {
-        console.log("Action added " + action);
         this.subscribers[action] = {};
         this.actions[action] = action;
     }
@@ -53,7 +52,6 @@ export default class Dispatcher {
     }
 
     subscribe(action, listener, id = this.idPrefix + this.subscriptionId++) {
-        console.log("Attempt to subscribe - " + action + " by " + listener);
         this._verify(action);
         this.subscribers[action][id] = listener;
         return id;
