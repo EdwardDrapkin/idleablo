@@ -12,6 +12,7 @@ var uglify = require('gulp-uglify');
 var argv = require('yargs').argv;
 var plumber = require('gulp-plumber');
 var cache = {}, packageCache = {};
+var less = require('gulp-less');
 
 var localColors = {
     app: util.colors.green,
@@ -78,13 +79,29 @@ function appBundle() {
         .pipe(gulp.dest(localPaths.jsOutputPath));
 }
 
+function cssBundle() {
+    return gulp.src('./source/css/main.css')
+        .pipe(sourcemaps.init())
+        .pipe(less({
+            paths: ['node_modules']
+        }))
+        .pipe(sourcemaps.write(localPaths.sourcemapOutputPath))
+        .pipe(gulp.dest(localPaths.cssOutputPath));
+}
 
 function appLog(logLine) {
     return util.log(localColors.app("[bundle.js]"), logLine);
+}
+
+function copyFonts() {
+    return gulp.src('node_modules/bootstrap/fonts/*')
+        .pipe(gulp.dest('./build/fonts'))
 }
 
 /******************************
  * TASKS
  */
 gulp.task('app', appBundle);
-gulp.task('default', ['app']);
+gulp.task('css', cssBundle);
+gulp.task('fonts', copyFonts);
+gulp.task('default', ['css', 'fonts', 'app']);
