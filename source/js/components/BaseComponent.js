@@ -1,6 +1,6 @@
 import React from 'react';
 import Dispatcher from 'actions/Dispatcher.js';
-
+import ActionProxy from 'actions/ActionProxy.js';
 export default class BaseComponent extends React.Component {
     render() {
         var context = this.context;
@@ -17,35 +17,29 @@ export default class BaseComponent extends React.Component {
     }
 
     _getStateFromStores() {
-        console.log("Store state goes here.");
-        return [];
+        this.setState(this.getStateFromStores());
     }
 
     addAllCallbacks(type) {
         var _listener = this._getStateFromStores;
+        console.log(this);
 
+        var actions = (this.context && this.context.actions) || this.props.actions;
         for(var prop of Object.getOwnPropertyNames(type.prototype)) {
             if(prop != "constructor" && prop.startsWith('on')) {
                 let eventKey = Dispatcher.getEventDoneKey(null, prop, type.name);
-                this.context.actions.dispatcher.subscribe(eventKey, _listener);
+                actions.dispatcher.subscribe(eventKey, _listener);
             }
         }
     }
 
-    constructor(props, context) {
-        super(props, context);
-    }
-
     addSpecificCallback(type, prop) {
         var _listener = this._getStateFromStores;
+        var actions = (this.context && this.context.actions) || this.props.actions;
 
         if(prop != "constructor" && prop.startsWith('on')) {
             let eventKey = Dispatcher.getEventDoneKey(null, prop, type.name);
-            this.actions.dispatcher.subscribe(eventKey, _listener);
+            actions.dispatcher.subscribe(eventKey, _listener);
         }
     }
 }
-
-BaseComponent.contextTypes = {
-    actions: React.PropTypes.object.isRequired
-};

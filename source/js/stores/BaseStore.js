@@ -1,4 +1,4 @@
-import Dispatcher from 'actions/dispatcher.js';
+import Dispatcher from 'actions/Dispatcher.js';
 
 export default class BaseStore {
     watch(store, eventMethod = null) {
