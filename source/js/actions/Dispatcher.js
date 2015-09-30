@@ -67,4 +67,16 @@ export default class Dispatcher {
             throw "No such action: " + action;
         }
     }
+
+    static getEventKey(type, name) {
+        var eventKey = (type + "_" + name).toUpperCase();
+        return eventKey;
+    }
+
+    static getEventDoneKey(type, name, store) {
+        if(name.toLowerCase().startsWith('on')) {
+            name = name.slice(2);
+        }
+        return (store + "_" + (type != null ? type+name: name) + "_done").toUpperCase();
+    }
 }

@@ -1,10 +1,11 @@
-export default class ActionProxy {
+import Dispatcher from 'actions/Dispatcher.js';
 
+export default class ActionProxy {
     constructor(dispatcher, actionCreators, stores) {
         this.children = actionCreators;
         this.stores = stores;
         this.dispatcher = dispatcher;
-
+        this.subscribers = {};
         this.methods = {};
 
         for(let child of this.children) {
@@ -21,7 +22,7 @@ export default class ActionProxy {
             }
         }
 
-        for(let store of stores) {
+        for(let store of this.stores) {
             for(let methodName in this.methods) {
                 let expectedListenerName = "on" + methodName.charAt(0).toUpperCase() + methodName.slice(1);
 
@@ -32,28 +33,44 @@ export default class ActionProxy {
                         store[expectedListenerName].apply &&
                         store[expectedListenerName].call) {
                     for(let type in this.methods[methodName]) {
-                        let eventKey = this.getEventKey(type, methodName);
-                        this.dispatcher.subscribe(eventKey, store[expectedListenerName]);
+                        let eventKey = Dispatcher.getEventKey(type, methodName);
+                        let doneKey = Dispatcher.getEventDoneKey(null, methodName, store.constructor.name);
+                        this.dispatcher.addAction(doneKey);
+                        this.addSubscriber(eventKey, (a1,a2,a3,a4,a5,a6,a7,a8,a9,a0,aa,ab,ac,ad,ae,af) => {
+                            store[expectedListenerName](a1,a2,a3,a4,a5,a6,a7,a8,a9,a0,aa,ab,ac,ad,ae,af);
+                            this.dispatcher.enqueue(doneKey);
+                        });
                     }
                 }
 
                 //they are looking for a specific type
                 //e.g. onTestActionsNotReal
                 for(let type in this.methods[methodName]) {
-                    let eventKey = this.getEventKey(type, methodName);
+                    let eventKey = Dispatcher.getEventKey(type, methodName);
+                    let doneKey = Dispatcher.getEventDoneKey(type, methodName, store.constructor.name);
                     let expectedListenerName = "on" +
                                                 type +
                                                 methodName.charAt(0).toUpperCase() + methodName.slice(1);
+
+                    this.dispatcher.addAction(doneKey);
 
                     if(store[expectedListenerName] &&
                             store[expectedListenerName].constructor &&
                             store[expectedListenerName].apply &&
                             store[expectedListenerName].call) {
-                        this.dispatcher.subscribe(eventKey, store[expectedListenerName]);
+                        this.addSubscriber(eventKey, (a1,a2,a3,a4,a5,a6,a7,a8,a9,a0,aa,ab,ac,ad,ae,af) => {
+                            store[expectedListenerName](a1,a2,a3,a4,a5,a6,a7,a8,a9,a0,aa,ab,ac,ad,ae,af);
+                            this.dispatcher.enqueue(doneKey);
+                        });
                     }
                 }
             }
         }
+    }
+
+    addSubscriber(eventKey, callback) {
+        this.dispatcher.subscribe(eventKey, callback);
+        this.subscribers[eventKey][this.getTypeOf(callback)]=callback;
     }
 
     addMethod(prop, child) {
@@ -70,13 +87,10 @@ export default class ActionProxy {
         }
 
         let type = this.getTypeOf(child);
+        let eventKey = Dispatcher.getEventKey(type,prop);
+        this.dispatcher.addAction(eventKey);
         this.methods[prop][type] = child;
-        this.dispatcher.addAction(this.getEventKey(type,prop));
-    }
-
-    getEventKey(type, name) {
-        var eventKey = (type + "_" + name).toUpperCase();
-        return eventKey;
+        this.subscribers[eventKey] = {};
     }
 
     callMethod(name, a1,a2,a3,a4,a5,a6,a7,a8,a9,a0,aa,ab,ac,ad,ae,af) {
@@ -88,8 +102,11 @@ export default class ActionProxy {
             let returns = [];
 
             for(let type in this.methods[name]) {
-                let _dispatch = dispatch.bind(this,this.getEventKey(type, name));
-                returns.push(this.methods[name][type][name](_dispatch, a1,a2,a3,a4,a5,a6,a7,a8,a9,a0,aa,ab,ac,ad,ae,af));
+                let eventKey = Dispatcher.getEventKey(type, name);
+                let _dispatch = dispatch.bind(this,eventKey);
+                returns.push(
+                    this.methods[name][type][name](_dispatch, a1,a2,a3,a4,a5,a6,a7,a8,a9,a0,aa,ab,ac,ad,ae,af)
+                );
             }
 
             return returns;
