@@ -16,9 +16,8 @@ export default class BaseComponent extends React.Component {
 
     addAllCallbacks(type) {
         var _listener = this._getStateFromStores.bind(this);
-        console.log(this);
+        var actions = this.getActions();
 
-        var actions = (this.context && this.context.actions) || this.props.actions;
         for(var prop of Object.getOwnPropertyNames(type.prototype)) {
             if(prop != "constructor" && prop.startsWith('on')) {
                 let eventKey = Dispatcher.getEventDoneKey(null, prop, type.name);
@@ -29,11 +28,23 @@ export default class BaseComponent extends React.Component {
 
     addSpecificCallback(type, prop) {
         var _listener = this._getStateFromStores.bind(this);
-        var actions = (this.context && this.context.actions) || this.props.actions;
+        var actions = this.getActions();
 
-        if(prop != "constructor" && prop.startsWith('on')) {
+        if(prop.call && prop.apply) {
+            prop = prop.name;
+        }
+
+        if(prop != "constructor" && prop.toString().startsWith('on')) {
             let eventKey = Dispatcher.getEventDoneKey(null, prop, type.name);
             actions.dispatcher.subscribe(eventKey, _listener);
+        }
+    }
+
+    getActions() {
+        if(!(this.context.actions || this.props.actions)) {
+            throw "No actions provided for a BaseComponent instance."
+        } else {
+            return this.props.actions ? this.props.actions : this.context.actions;
         }
     }
 }
